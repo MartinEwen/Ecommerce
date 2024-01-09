@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashbord admin
+{% endblock %}
+
+{% block body %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="sidebar col-1">
+				<a href="{{ path('app_cart_index') }}">Cart</a>
+				<a href="{{ path('app_gamme_index') }}">Gamme</a>
+				<a href="{{ path('app_products_new') }}">New Product</a>
+				<a href="{{ path('app_user_index') }}">Users</a>
+			</div>
+			<div class="col-11">
+				{% block Admin %}{% endblock %}
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
