@@ -1,35 +1,36 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/index.html.twig' %}
 
-{% block title %}Gamme index{% endblock %}
+{% block title %}Gamme index
+{% endblock %}
 
-{% block body %}
-    <h1>Gamme index</h1>
+{% block admin %}
+	<h1>Gamme index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>NameGamme</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for gamme in gammes %}
-            <tr>
-                <td>{{ gamme.id }}</td>
-                <td>{{ gamme.nameGamme }}</td>
-                <td>
-                    <a href="{{ path('app_gamme_show', {'id': gamme.id}) }}">show</a>
-                    <a href="{{ path('app_gamme_edit', {'id': gamme.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>NameGamme</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for gamme in gammes %}
+				<tr>
+					<td>{{ gamme.id }}</td>
+					<td>{{ gamme.nameGamme }}</td>
+					<td>
+						<a href="{{ path('app_gamme_show', {'id': gamme.id}) }}">show</a>
+						<a href="{{ path('app_gamme_edit', {'id': gamme.id}) }}">edit</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="3">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
-    <a href="{{ path('app_gamme_new') }}">Create new</a>
+	<a href="{{ path('app_gamme_new') }}">Create new</a>
 {% endblock %}

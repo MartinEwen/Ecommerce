@@ -24,21 +24,21 @@ class Products
     #[ORM\OneToMany(mappedBy: 'products', targetEntity: Cart::class)]
     private Collection $carts;
 
-    #[ORM\ManyToMany(targetEntity: Favoris::class, mappedBy: 'products')]
-    private Collection $favoris;
-
-    #[ORM\ManyToMany(targetEntity: Pictures::class, mappedBy: 'products')]
-    private Collection $pictures;
-
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Gamme $gamme = null;
 
+    #[ORM\OneToMany(mappedBy: 'products', targetEntity: Pictures::class)]
+    private Collection $pictures;
+
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'products')]
+    private Collection $user;
+
     public function __construct()
     {
         $this->carts = new ArrayCollection();
-        $this->favoris = new ArrayCollection();
         $this->pictures = new ArrayCollection();
+        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,29 +100,14 @@ class Products
         return $this;
     }
 
-    /**
-     * @return Collection<int, Favoris>
-     */
-    public function getFavoris(): Collection
+    public function getGamme(): ?Gamme
     {
-        return $this->favoris;
+        return $this->gamme;
     }
 
-    public function addFavori(Favoris $favori): static
+    public function setGamme(?Gamme $gamme): static
     {
-        if (!$this->favoris->contains($favori)) {
-            $this->favoris->add($favori);
-            $favori->addProduct($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFavori(Favoris $favori): static
-    {
-        if ($this->favoris->removeElement($favori)) {
-            $favori->removeProduct($this);
-        }
+        $this->gamme = $gamme;
 
         return $this;
     }
@@ -139,7 +124,7 @@ class Products
     {
         if (!$this->pictures->contains($picture)) {
             $this->pictures->add($picture);
-            $picture->addProduct($this);
+            $picture->setProducts($this);
         }
 
         return $this;
@@ -148,20 +133,35 @@ class Products
     public function removePicture(Pictures $picture): static
     {
         if ($this->pictures->removeElement($picture)) {
-            $picture->removeProduct($this);
+            // set the owning side to null (unless already changed)
+            if ($picture->getProducts() === $this) {
+                $picture->setProducts(null);
+            }
         }
 
         return $this;
     }
 
-    public function getGamme(): ?Gamme
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUser(): Collection
     {
-        return $this->gamme;
+        return $this->user;
     }
 
-    public function setGamme(?Gamme $gamme): static
+    public function addUser(User $user): static
     {
-        $this->gamme = $gamme;
+        if (!$this->user->contains($user)) {
+            $this->user->add($user);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        $this->user->removeElement($user);
 
         return $this;
     }

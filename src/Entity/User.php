@@ -38,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $adress = null;
+    private ?string $address = null;
 
     #[ORM\Column(length: 20)]
     private ?string $pseudo = null;
@@ -49,12 +49,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Cart $cart = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Favoris::class)]
-    private Collection $favoris;
+    #[ORM\ManyToMany(targetEntity: Products::class, mappedBy: 'user')]
+    private Collection $products;
 
     public function __construct()
     {
-        $this->favoris = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,14 +151,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAdress(): ?string
+    public function getaddress(): ?string
     {
-        return $this->adress;
+        return $this->address;
     }
 
-    public function setAdress(string $adress): static
+    public function setaddress(string $address): static
     {
-        $this->adress = $adress;
+        $this->address = $address;
 
         return $this;
     }
@@ -210,30 +210,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Favoris>
+     * @return Collection<int, Products>
      */
-    public function getFavoris(): Collection
+    public function getProducts(): Collection
     {
-        return $this->favoris;
+        return $this->products;
     }
 
-    public function addFavori(Favoris $favori): static
+    public function addProduct(Products $product): static
     {
-        if (!$this->favoris->contains($favori)) {
-            $this->favoris->add($favori);
-            $favori->setUser($this);
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->addUser($this);
         }
 
         return $this;
     }
 
-    public function removeFavori(Favoris $favori): static
+    public function removeProduct(Products $product): static
     {
-        if ($this->favoris->removeElement($favori)) {
-            // set the owning side to null (unless already changed)
-            if ($favori->getUser() === $this) {
-                $favori->setUser(null);
-            }
+        if ($this->products->removeElement($product)) {
+            $product->removeUser($this);
         }
 
         return $this;

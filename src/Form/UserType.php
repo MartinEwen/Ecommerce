@@ -20,7 +20,7 @@ class UserType extends AbstractType
             ->add('name')
             ->add('firstName')
             ->add('mail')
-            ->add('adress')
+            ->add('address')
             ->add('pseudo')
             ->add('city')
             ->add('cart', EntityType::class, [

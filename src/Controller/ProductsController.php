@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Products;
 use App\Form\ProductsType;
-use App\Repository\GammeRepository;
 use App\Repository\ProductsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,11 +15,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProductsController extends AbstractController
 {
     #[Route('/', name: 'app_products_index', methods: ['GET'])]
-    public function index(ProductsRepository $productsRepository, GammeRepository $gammeRepository): Response
+    public function index(ProductsRepository $productsRepository): Response
     {
         return $this->render('products/index.html.twig', [
             'products' => $productsRepository->findAll(),
-            'gamme' => $gammeRepository->findAll(),
         ]);
     }
 

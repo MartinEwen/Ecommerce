@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashbord admin
+{% endblock %}
+
+{% block body %}
+	<div class="sidebar">
+		<a href="{{ path('app_cart_index') }}">Cart</a>
+		<a href="{{ path('app_gamme_index') }}">Gamme</a>
+		<a href="{{ path('app_products_new') }}">New Product</a>
+		<a href="{{ path('app_user_index') }}">Users</a>
+	</div>
+
+	{% block admin %}{% endblock %}
+
+{% endblock %}

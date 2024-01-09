@@ -13,7 +13,7 @@ class GammeFixture extends Fixture
     {
         $faker = Factory::create(); 
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $gamme = new Gamme();
             $gamme->setNameGamme($faker->word);
 

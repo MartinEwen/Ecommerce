@@ -1,11 +1,12 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/index.html.twig' %}
 
-{% block title %}New Gamme{% endblock %}
+{% block title %}New Gamme
+{% endblock %}
 
-{% block body %}
-    <h1>Create new Gamme</h1>
+{% block admin %}
+	<h1>Create new Gamme</h1>
 
-    {{ include('gamme/_form.html.twig') }}
+	{{ include('gamme/_form.html.twig') }}
 
-    <a href="{{ path('app_gamme_index') }}">back to list</a>
+	<a href="{{ path('app_gamme_index') }}">back to list</a>
 {% endblock %}

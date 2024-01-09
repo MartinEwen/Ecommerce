@@ -18,12 +18,11 @@ class Pictures
     #[ORM\Column(length: 50)]
     private ?string $namePicture = null;
 
-    #[ORM\ManyToMany(targetEntity: Products::class, inversedBy: 'pictures')]
-    private Collection $products;
+    #[ORM\ManyToOne(inversedBy: 'pictures')]
+    private ?Products $products = null;
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -43,26 +42,14 @@ class Pictures
         return $this;
     }
 
-    /**
-     * @return Collection<int, Products>
-     */
-    public function getProducts(): Collection
+    public function getProducts(): ?Products
     {
         return $this->products;
     }
 
-    public function addProduct(Products $product): static
+    public function setProducts(?Products $products): static
     {
-        if (!$this->products->contains($product)) {
-            $this->products->add($product);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Products $product): static
-    {
-        $this->products->removeElement($product);
+        $this->products = $products;
 
         return $this;
     }

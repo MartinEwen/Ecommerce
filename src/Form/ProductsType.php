@@ -15,13 +15,7 @@ class ProductsType extends AbstractType
     {
         $builder
             ->add('nameProducts')
-            ->add('price')
-            ->add('favoris', EntityType::class, [
-                'class' => Favoris::class,
-'choice_label' => 'id',
-'multiple' => true,
-            ])
-        ;
+            ->add('price');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
