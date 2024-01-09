@@ -5,15 +5,15 @@ namespace App\DataFixtures;
 use App\Entity\Gamme;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\DBAL\Driver\IBMDB2\Exception\Factory;
+use Faker\Factory;
 
 class GammeFixture extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create('fr_FR'); 
+        $faker = Factory::create(); 
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $gamme = new Gamme();
             $gamme->setNameGamme($faker->word);
 

@@ -5,7 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Pictures;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\DBAL\Driver\IBMDB2\Exception\Factory;
+use Faker\Factory;
 
 class PicturesFixture extends Fixture
 {
@@ -13,7 +13,7 @@ class PicturesFixture extends Fixture
     {
         $faker = Factory::create();
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 700; $i++) {
             $picture = new Pictures();
             $picture->setNamePicture($faker->imageUrl());
 

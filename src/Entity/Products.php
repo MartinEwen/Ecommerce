@@ -30,6 +30,10 @@ class Products
     #[ORM\ManyToMany(targetEntity: Pictures::class, mappedBy: 'products')]
     private Collection $pictures;
 
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Gamme $gamme = null;
+
     public function __construct()
     {
         $this->carts = new ArrayCollection();
@@ -146,6 +150,18 @@ class Products
         if ($this->pictures->removeElement($picture)) {
             $picture->removeProduct($this);
         }
+
+        return $this;
+    }
+
+    public function getGamme(): ?Gamme
+    {
+        return $this->gamme;
+    }
+
+    public function setGamme(?Gamme $gamme): static
+    {
+        $this->gamme = $gamme;
 
         return $this;
     }
