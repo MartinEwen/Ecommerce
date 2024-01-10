@@ -13,31 +13,39 @@ class ProductFixture extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create();
-
+        $faker = \Faker\Factory::create();
         $gammes = $manager->getRepository(Gamme::class)->findAll();
 
-        for ($i = 0; $i < 100; $i++) {
-            $product = new Products();
-            $product->setNameProducts($faker->word);
-            $product->setPrice($faker->numberBetween(10, 1000));
-            $product->setGamme($faker->randomElement($gammes));
+        $colors = ['yellow', 'green', 'blue', 'red'];
+        $sizes = ['small', 'medium', 'large', 'Extra Large'];
+        $raceCanard = ['Canard de Barbarie','Canard mandarin','Canard colvert','Canard Pékinois','Canard de Rouen','Canard Cayuga','Canard d\'Aylesbury','Canard de l\'Orégon','Canard de Saxe', 'Canard Coureur Indien','Canard de Laysan','Canard Mignon','Canard Whistling','Canard Pintade','Canard Fuligule','Canard Mignon','Canard Siffleur','Canard Sarcelle','Canard Kaki Campbell','Canard Long Island'];
+        $nameCanard = ['Donald','Daisy','Daffy','Howard','Quacker','Webby','Scrooge','Mallory','Ferdinand','Gladstone','Launchpad','Beakley','Darkwing','Huey','Dewey', 'Louie','Magica','Gizmoduck','Nephews','Squeak'];
 
-            $manager->persist($product);
+        for ($i = 0; $i < 100; $i++) {
+            $canard = new Products();
+            $canard->setNameProducts($faker->randomElement($nameCanard) .' '.'le'.' '. $faker->randomElement($raceCanard));
+            $canard->setPrice($faker->numberBetween(5, 50));
+            $canard->setGamme($faker->randomElement($gammes));
+
+            // Ajoutons quelques caractéristiques spécifiques aux canards
+            $color = $faker->randomElement($colors);
+            $size = $faker->randomElement($sizes);
+            $canard->setDescription("A lovely $color $size duck for your collection!");
+
+            $manager->persist($canard);
 
             $numImages = $faker->numberBetween(2, 5);
 
-            // Créer et associer des images à ce produit
+            // Créer et associer des images de canards à ce produit
             for ($j = 0; $j < $numImages; $j++) {
                 $picture = new Pictures();
-                $picture->setNamePicture($faker->word);
-
-                // Associer l'image au produit en cours de traitement
-                $picture->setProducts($product);
+                $picture->setNamePicture(ucfirst($faker->word) . '.jpg');
+                $picture->setProducts($canard);
                 $manager->persist($picture);
             }
         }
 
         $manager->flush();
     }
+   
 }

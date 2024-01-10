@@ -6,13 +6,13 @@
 {% block body %}
 	<div class="container-fluid">
 		<div class="row">
-			<div class="sidebar col-1">
+			<div class="col-2 sidebar ">
 				<a href="{{ path('app_cart_index') }}">Cart</a>
 				<a href="{{ path('app_gamme_index') }}">Gamme</a>
-				<a href="{{ path('app_products_new') }}">New Product</a>
+				<a href="{{ path('app_products_admin') }}">Product</a>
 				<a href="{{ path('app_user_index') }}">Users</a>
 			</div>
-			<div class="col-11">
+			<div class="col-10 content">
 				{% block Admin %}{% endblock %}
 			</div>
 		</div>

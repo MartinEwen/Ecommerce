@@ -11,14 +11,14 @@ class GammeFixture extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create(); 
-
-        for ($i = 0; $i < 5; $i++) {
+        $gammeCanard = ['Canards Sauvages','Collection Plumes Dorées','Canards Aquatiques','Variété Mallard','Canards en Parade',];
+        foreach ($gammeCanard as $nomGamme) {
             $gamme = new Gamme();
-            $gamme->setNameGamme($faker->word);
-
+            $gamme->setNameGamme($nomGamme);
+        
             $manager->persist($gamme);
         }
+        
 
         $manager->flush();
     }

@@ -20,8 +20,7 @@
 					<td>{{ cart.id }}</td>
 					<td>{{ cart.nb }}</td>
 					<td>
-						<a href="{{ path('app_cart_show', {'id': cart.id}) }}">show</a>
-						<a href="{{ path('app_cart_edit', {'id': cart.id}) }}">edit</a>
+						<a href="{{ path('app_cart_delete', {'id': cart.id}) }}">delete</a>
 					</td>
 				</tr>
 			{% else %}
@@ -31,6 +30,4 @@
 			{% endfor %}
 		</tbody>
 	</table>
-
-	<a href="{{ path('app_cart_new') }}">Create new</a>
 {% endblock %}

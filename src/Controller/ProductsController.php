@@ -17,7 +17,17 @@ class ProductsController extends AbstractController
     #[Route('/', name: 'app_products_index', methods: ['GET'])]
     public function index(ProductsRepository $productsRepository): Response
     {
+        $products = $productsRepository->findAll();
+        shuffle($products);
         return $this->render('products/index.html.twig', [
+            'products' => $products,
+        ]);
+    }
+
+    #[Route('/adminProducts', name: 'app_products_admin', methods: ['GET'])]
+    public function productsAdmin(ProductsRepository $productsRepository): Response
+    {
+        return $this->render('products/adminIndex.html.twig', [
             'products' => $productsRepository->findAll(),
         ]);
     }
@@ -59,7 +69,7 @@ class ProductsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_products_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_products_admin', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('products/edit.html.twig', [
@@ -76,6 +86,6 @@ class ProductsController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_products_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_products_admin', [], Response::HTTP_SEE_OTHER);
     }
 }

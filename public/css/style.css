@@ -3,12 +3,15 @@ body {
   padding: 0;
   font-family: Arial, sans-serif;
 }
+body .card {
+  height: 100%;
+}
 body .sidebar {
-  position: fixed;
   left: 0;
   top: 0;
-  width: 190px;
-  height: 100%;
+  position: -webkit-sticky;
+  position: sticky;
+  height: 100vh;
   background-color: #333;
   padding-top: 20px;
   color: #fff;
@@ -20,14 +23,17 @@ body .sidebar {
 }
 body .sidebar a {
   display: block;
-  padding: 10px;
+  margin: 10%;
   color: #fff;
   text-decoration: none;
 }
 body .sidebar a:hover {
-  background-color: #555;
+  text-decoration: underline;
+  transform: scale(1.2);
 }
 body .content {
-  margin-left: 200px;
-  padding: 20px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+body input {
+  width: 50%;
 }/*# sourceMappingURL=style.css.map */
