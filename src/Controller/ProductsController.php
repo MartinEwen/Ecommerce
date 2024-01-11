@@ -2,29 +2,34 @@
 
 namespace App\Controller;
 
+use App\Entity\Pictures;
 use App\Entity\Products;
 use App\Form\ProductsType;
+use App\Service\PictureService;
 use App\Repository\ProductsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
-#[Route('/products')]
+#[Route('/products', name: 'app_products_')]
 class ProductsController extends AbstractController
 {
-    #[Route('/', name: 'app_products_index', methods: ['GET'])]
-    public function index(ProductsRepository $productsRepository): Response
+    #[Route('/', name: 'index', methods: ['GET'])]
+    public function index(ProductsRepository $productsRepository, Request $request): Response
     {
-        $products = $productsRepository->findAll();
-        shuffle($products);
+        $page = $request->query->getInt('page', 1);
+        $products = $productsRepository->findProductsPaginated($page, 8);
+        // $products = $productsRepository->findAll();
+        // shuffle($products);
         return $this->render('products/index.html.twig', [
             'products' => $products,
         ]);
     }
 
-    #[Route('/adminProducts', name: 'app_products_admin', methods: ['GET'])]
+    #[Route('/adminProducts', name: 'admin', methods: ['GET'])]
     public function productsAdmin(ProductsRepository $productsRepository): Response
     {
         return $this->render('products/adminIndex.html.twig', [
@@ -32,27 +37,49 @@ class ProductsController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_products_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger, PictureService $pictureService): Response
     {
         $product = new Products();
         $form = $this->createForm(ProductsType::class, $product);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
+            $images = $form->get('pictures')->getData();
+    
+            foreach ($images as $image) {
+                $folder = 'pictures';
+                $fichier = $pictureService->add($image, $folder);
+    
+                // Create and persist a new Pictures entity for each uploaded image
+                $img = new Pictures();
+                $img->setNamePicture($fichier);
+                $entityManager->persist($img);
+    
+                // Add the Pictures entity to the product
+                $product->addPicture($img);
+            }
+    
+            // Slugify the product name and set it as the product's slug
+            $slug = $slugger->slug($product->getNameProducts())->lower();
+            $product->setSlug($slug);
+    
+            // Persist and flush the product entity
             $entityManager->persist($product);
             $entityManager->flush();
-
+    
+            // Redirect to the index page after successful form submission
             return $this->redirectToRoute('app_products_index', [], Response::HTTP_SEE_OTHER);
         }
-
+    
+        // Render the form if it is not submitted or invalid
         return $this->render('products/new.html.twig', [
             'product' => $product,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/{id}', name: 'app_products_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'show', methods: ['GET'])]
     public function show(Products $product): Response
     {
         return $this->render('products/show.html.twig', [
@@ -60,7 +87,7 @@ class ProductsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_products_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Products $product, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ProductsType::class, $product);
@@ -78,7 +105,7 @@ class ProductsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_products_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Products $product, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {

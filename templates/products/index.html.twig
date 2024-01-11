@@ -6,24 +6,22 @@
 {% block body %}
 	<div class="container-fluid">
 		<div class="row">
-			{% for product in products %}
+			{% for product in products.data %}
 				<div class="col-lg-6 col-xl-4 col-xxl-3 p-4 d-flex justify-content-center text-center">
-					<a href="{{ path('app_products_show', {'id': product.id}) }}" class="text-decoration-none">
+					<a href="{{ path('app_products_show', {'id': product.id}) }}" class="text-decoration-none card">
 						<div class="card">
 							<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
 								<div class="carousel-inner">
 									{% for picture in product.pictures %}
-										<div
-											class="carousel-item active">
-											{# <img src="{{ picture.namePicture }}" class="d-block w-100" alt="{{ picture.namePicture }}"> #}
-											<p class="d-block w-100">{{ picture.namePicture }}</p>
+										<div class="carousel-item active">
+											<img src="{{ asset('image/pictures/') ~ picture.namePicture }}" alt="{{ product.slug }}">
 										</div>
 									{% endfor %}
 								</div>
 							</div>
 							<div class="card-body">
 								<h5 class="card-title">{{ product.nameProducts }}</h5>
-								<p class="card-text">{{ product.description }}</p>
+								<p class="card-text">{{ product.description|slice(0, 15) ~ (product.description|length > 15 ? '...' : '') }}</p>
 								<p class="card-text">{{ product.gamme.nameGamme }}</p>
 								<p class="card-text">{{ product.price }}€</p>
 								<p class="btn btn-primary">voir le produit</p>
@@ -32,6 +30,10 @@
 					</a>
 				</div>
 			{% endfor %}
+			{% set path = 'app_products_index' %}
+			{% set pages = products.pages %}
+			{% set currentPage = products.page %}
+			{% include "_partials/_pagination.html.twig" %}
 		</div>
 	</div>
 {% endblock %}

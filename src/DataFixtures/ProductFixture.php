@@ -8,9 +8,17 @@ use App\Entity\Pictures;
 use App\Entity\Products;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ProductFixture extends Fixture
 {
+    private $slugger;
+
+    public function __construct(SluggerInterface $slugger)
+    {
+        $this->slugger = $slugger;
+    }
+
     public function load(ObjectManager $manager)
     {
         $faker = \Faker\Factory::create();
@@ -21,9 +29,11 @@ class ProductFixture extends Fixture
         $raceCanard = ['Canard de Barbarie','Canard mandarin','Canard colvert','Canard Pékinois','Canard de Rouen','Canard Cayuga','Canard d\'Aylesbury','Canard de l\'Orégon','Canard de Saxe', 'Canard Coureur Indien','Canard de Laysan','Canard Mignon','Canard Whistling','Canard Pintade','Canard Fuligule','Canard Mignon','Canard Siffleur','Canard Sarcelle','Canard Kaki Campbell','Canard Long Island'];
         $nameCanard = ['Donald','Daisy','Daffy','Howard','Quacker','Webby','Scrooge','Mallory','Ferdinand','Gladstone','Launchpad','Beakley','Darkwing','Huey','Dewey', 'Louie','Magica','Gizmoduck','Nephews','Squeak'];
 
+        
         for ($i = 0; $i < 100; $i++) {
             $canard = new Products();
-            $canard->setNameProducts($faker->randomElement($nameCanard) .' '.'le'.' '. $faker->randomElement($raceCanard));
+            $name = $faker->randomElement($nameCanard) . ' ' . 'le' . ' ' . $faker->randomElement($raceCanard);
+            $canard->setNameProducts($name);
             $canard->setPrice($faker->numberBetween(5, 50));
             $canard->setGamme($faker->randomElement($gammes));
 
@@ -31,6 +41,10 @@ class ProductFixture extends Fixture
             $color = $faker->randomElement($colors);
             $size = $faker->randomElement($sizes);
             $canard->setDescription("A lovely $color $size duck for your collection!");
+
+            // Set the slug based on the nameProducts
+            $slug = $this->slugger->slug($name)->lower();
+            $canard->setSlug($slug);
 
             $manager->persist($canard);
 

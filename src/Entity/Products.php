@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ProductsRepository::class)]
 class Products
 {
+    use SlugTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -32,9 +34,6 @@ class Products
     #[ORM\OneToMany(mappedBy: 'products', targetEntity: Pictures::class)]
     private Collection $pictures;
 
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'products')]
-    private Collection $user;
-
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
@@ -42,7 +41,6 @@ class Products
     {
         $this->carts = new ArrayCollection();
         $this->pictures = new ArrayCollection();
-        $this->user = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -142,30 +140,6 @@ class Products
                 $picture->setProducts(null);
             }
         }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
-    {
-        return $this->user;
-    }
-
-    public function addUser(User $user): static
-    {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): static
-    {
-        $this->user->removeElement($user);
 
         return $this;
     }

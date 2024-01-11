@@ -49,9 +49,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Cart $cart = null;
 
-    #[ORM\ManyToMany(targetEntity: Products::class, mappedBy: 'user')]
-    private Collection $products;
-
     public function __construct()
     {
         $this->products = new ArrayCollection();
@@ -205,33 +202,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->cart = $cart;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Products>
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Products $product): static
-    {
-        if (!$this->products->contains($product)) {
-            $this->products->add($product);
-            $product->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Products $product): static
-    {
-        if ($this->products->removeElement($product)) {
-            $product->removeUser($this);
-        }
 
         return $this;
     }

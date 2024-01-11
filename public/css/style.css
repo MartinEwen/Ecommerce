@@ -6,6 +6,14 @@ body {
 body .card {
   height: 100%;
 }
+body .card {
+  height: 500px;
+  width: 300px;
+}
+body .carousel-inner img {
+  height: 250px;
+  width: auto;
+}
 body .sidebar {
   left: 0;
   top: 0;
