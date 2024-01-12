@@ -6,26 +6,30 @@ use App\Entity\Pictures;
 use App\Entity\Products;
 use App\Form\ProductsType;
 use App\Service\PictureService;
+use App\Repository\GammeRepository;
 use App\Repository\ProductsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/products', name: 'app_products_')]
 class ProductsController extends AbstractController
 {
-    #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(ProductsRepository $productsRepository, Request $request): Response
+    #[Route('/', name: 'index', methods: ['GET', 'POST'])]
+    public function index(ProductsRepository $productsRepository, Request $request, GammeRepository $gammeRepository): Response
     {
-        $page = $request->query->getInt('page', 1);
-        $products = $productsRepository->findProductsPaginated($page, 8);
-        // $products = $productsRepository->findAll();
-        // shuffle($products);
+        
+        // $gammes = $gammeRepository->findAll();
+        // $page = $request->query->getInt('page', 1);
+        // $products = $productsRepository->findProductsPaginated($page, 8);
+        $products = $productsRepository->findAll();
+        shuffle($products);
         return $this->render('products/index.html.twig', [
             'products' => $products,
+            'gammes' => $gammeRepository->findAll(),
         ]);
     }
 

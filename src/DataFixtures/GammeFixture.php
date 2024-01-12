@@ -11,7 +11,7 @@ class GammeFixture extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        $gammeCanard = ['Canards Sauvages','Collection Plumes Dorées','Canards Aquatiques','Variété Mallard','Canards en Parade',];
+        $gammeCanard = ['Canards Sauvages','Canards Plumes Dorées','Canards Aquatiques','Canards de Variété Mallard','Canards en Parade',];
         foreach ($gammeCanard as $nomGamme) {
             $gamme = new Gamme();
             $gamme->setNameGamme($nomGamme);

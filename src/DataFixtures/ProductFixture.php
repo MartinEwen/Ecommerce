@@ -28,11 +28,12 @@ class ProductFixture extends Fixture
         $sizes = ['small', 'medium', 'large', 'Extra Large'];
         $raceCanard = ['Canard de Barbarie','Canard mandarin','Canard colvert','Canard Pékinois','Canard de Rouen','Canard Cayuga','Canard d\'Aylesbury','Canard de l\'Orégon','Canard de Saxe', 'Canard Coureur Indien','Canard de Laysan','Canard Mignon','Canard Whistling','Canard Pintade','Canard Fuligule','Canard Mignon','Canard Siffleur','Canard Sarcelle','Canard Kaki Campbell','Canard Long Island'];
         $nameCanard = ['Donald','Daisy','Daffy','Howard','Quacker','Webby','Scrooge','Mallory','Ferdinand','Gladstone','Launchpad','Beakley','Darkwing','Huey','Dewey', 'Louie','Magica','Gizmoduck','Nephews','Squeak'];
-
+        $imgCanard =['canarchiste.jpg', 'donald.jpg', 'canard-avion.jpg', 'canard-banane.jpg', 'canard-gonflable.jpg', 'journal-canard.jpg'];
         
         for ($i = 0; $i < 100; $i++) {
             $canard = new Products();
-            $name = $faker->randomElement($nameCanard) . ' ' . 'le' . ' ' . $faker->randomElement($raceCanard);
+            $canardRace = $faker->randomElement($raceCanard);
+            $name = $faker->randomElement($nameCanard) . ' ' . 'le' . ' ' . $canardRace;
             $canard->setNameProducts($name);
             $canard->setPrice($faker->numberBetween(5, 50));
             $canard->setGamme($faker->randomElement($gammes));
@@ -40,20 +41,21 @@ class ProductFixture extends Fixture
             // Ajoutons quelques caractéristiques spécifiques aux canards
             $color = $faker->randomElement($colors);
             $size = $faker->randomElement($sizes);
-            $canard->setDescription("A lovely $color $size duck for your collection!");
+            $canard->setDescription("Je suis de la race des $canardRace de taille plutot $size et de couleur $color");
 
             // Set the slug based on the nameProducts
             $slug = $this->slugger->slug($name)->lower();
             $canard->setSlug($slug);
 
             $manager->persist($canard);
-
             $numImages = $faker->numberBetween(2, 5);
 
             // Créer et associer des images de canards à ce produit
             for ($j = 0; $j < $numImages; $j++) {
+                $selectedImage = $faker->randomElement($imgCanard);
+            
                 $picture = new Pictures();
-                $picture->setNamePicture(ucfirst($faker->word) . '.jpg');
+                $picture->setNamePicture($selectedImage);
                 $picture->setProducts($canard);
                 $manager->persist($picture);
             }
