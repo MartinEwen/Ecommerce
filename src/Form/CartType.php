@@ -18,11 +18,11 @@ class CartType extends AbstractType
             ->add('nb')
             ->add('user', EntityType::class, [
                 'class' => User::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
             ->add('products', EntityType::class, [
                 'class' => Products::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
         ;
     }

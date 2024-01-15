@@ -21,18 +21,23 @@ class ProductsController extends AbstractController
     #[Route('/', name: 'index', methods: ['GET', 'POST'])]
     public function index(ProductsRepository $productsRepository, Request $request, GammeRepository $gammeRepository): Response
     {
-        
-        // $gammes = $gammeRepository->findAll();
-        // $page = $request->query->getInt('page', 1);
-        // $products = $productsRepository->findProductsPaginated($page, 8);
-        $products = $productsRepository->findAll();
-        shuffle($products);
+        $gammes = $gammeRepository->findAll();
+        $selectedGammeId = $request->query->getInt('selected_gamme', 0);
+
+        if ($selectedGammeId !== 0) {
+            $gammes = [$gammeRepository->find($selectedGammeId)];
+        }
+
+        $page = $request->query->getInt('page', 1);
+        $products = $productsRepository->findProductsPaginated($page, 8, $selectedGammeId);
+
         return $this->render('products/index.html.twig', [
             'products' => $products,
-            'gammes' => $gammeRepository->findAll(),
+            'gammes' => $gammes,
+            'selectedGammeId' => $selectedGammeId,
         ]);
     }
-
+    
     #[Route('/adminProducts', name: 'admin', methods: ['GET'])]
     public function productsAdmin(ProductsRepository $productsRepository): Response
     {
@@ -47,36 +52,29 @@ class ProductsController extends AbstractController
         $product = new Products();
         $form = $this->createForm(ProductsType::class, $product);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             $images = $form->get('pictures')->getData();
-    
+
             foreach ($images as $image) {
                 $folder = 'pictures';
                 $fichier = $pictureService->add($image, $folder);
-    
-                // Create and persist a new Pictures entity for each uploaded image
+
                 $img = new Pictures();
                 $img->setNamePicture($fichier);
                 $entityManager->persist($img);
-    
-                // Add the Pictures entity to the product
+
                 $product->addPicture($img);
             }
-    
-            // Slugify the product name and set it as the product's slug
+
             $slug = $slugger->slug($product->getNameProducts())->lower();
             $product->setSlug($slug);
-    
-            // Persist and flush the product entity
             $entityManager->persist($product);
             $entityManager->flush();
-    
-            // Redirect to the index page after successful form submission
+
             return $this->redirectToRoute('app_products_index', [], Response::HTTP_SEE_OTHER);
         }
-    
-        // Render the form if it is not submitted or invalid
+
         return $this->render('products/new.html.twig', [
             'product' => $product,
             'form' => $form->createView(),
@@ -112,7 +110,7 @@ class ProductsController extends AbstractController
     #[Route('/{id}', name: 'delete', methods: ['POST'])]
     public function delete(Request $request, Products $product, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $product->getId(), $request->request->get('_token'))) {
             $entityManager->remove($product);
             $entityManager->flush();
         }

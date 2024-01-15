@@ -19,13 +19,12 @@ class UserType extends AbstractType
             ->add('password')
             ->add('name')
             ->add('firstName')
-            ->add('mail')
             ->add('address')
             ->add('pseudo')
             ->add('city')
             ->add('cart', EntityType::class, [
                 'class' => Cart::class,
-'choice_label' => 'id',
+                'choice_label' => 'id',
             ])
         ;
     }

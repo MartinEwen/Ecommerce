@@ -1,8 +1,17 @@
+
+$primary-color: #ffcc00; 
+$secondary-color: #00a8e8; 
+
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f0f0; 
 
+    h2{
+        margin-top: 5%;
+        font-family:Georgia, 'Times New Roman', Times, serif
+    }
     .card {
         height: 100%;
     }
@@ -18,7 +27,17 @@ body {
             width: 100%;
         }
     }
-
+    .presentation {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        img{
+            width:50%;
+            height: auto;
+        }
+    }
     .sidebar {
         left: 0;
         top: 0;
@@ -54,3 +73,27 @@ body {
         width: 50%;
     }
 }
+nav {
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+  
+      li {
+        display: inline-block;
+        margin-right: 10px;
+  
+        a {
+          text-decoration: none;
+          color: $secondary-color;
+          transition: color 0.3s;
+  
+          &:hover {
+            color: darken($secondary-color, 10%);
+          }
+        }
+      }
+    }
+  }
+  

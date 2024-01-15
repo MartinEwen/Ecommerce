@@ -10,17 +10,12 @@
 
 		<p>{{ product.description }}</p>
 
-		<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-			<div class="carousel-inner">
-				{% for picture in product.pictures %}
-					<div
-						class="carousel-item active">
-						{# <img src="{{ picture.namePicture }}" class="d-block w-100" alt="{{ picture.namePicture }}"> #}
-						<p class="d-block w-100">{{ picture.namePicture }}</p>
-					</div>
-				{% endfor %}
-			</div>
+		<div class="presentation">
+			{% for picture in product.pictures %}
+				<img src="{{ asset('image/pictures/') ~ picture.namePicture }}" alt="{{ product.slug }}" class"presentation">
+			{% endfor %}
 		</div>
+
 
 		<a class="btn btn-primary" href="{{ path('app_products_index') }}">back to list</a>
 	</main>
